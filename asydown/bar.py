@@ -17,6 +17,11 @@ class ProgressBarManager:
         self.list_of_bars.append(bar)
         return bar
 
+    def update_total_bar(self, total: int) -> None:
+        for bar in self.list_of_bars:
+            if bar.prefix == 'TOTAL:':
+                bar.update_total_bar(total)
+
     def print_bars(self) -> None:
         print(CLEAR_SCREEN_SEQUENCE)
         for bar in self.list_of_bars:
@@ -26,11 +31,12 @@ class ProgressBarManager:
 class ProgressBar:
     def __init__(self, manager: ProgressBarManager, total: int, prefix: str = ''):
         self.progress_manager = manager
-        self.total = total
-        self.prefix = prefix
+        self.total = 0
         self.completed = 0
         self.progress = 0
-        ...
+        self.total = total
+
+        self.prefix = prefix
 
     def update(self, completed: int, adjust: bool = None) -> None:
         if adjust:
@@ -45,6 +51,9 @@ class ProgressBar:
         self.progress = int(self.completed / self.total * PBAR_WIDTH)
 
         self.progress_manager.print_bars()
+
+    def update_total_bar(self, total: int) -> None:
+        self.total = self.total + total
 
     def print(self) -> None:
 
