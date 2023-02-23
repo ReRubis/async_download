@@ -5,6 +5,8 @@ GO_TO_BEGINNING_OF_LINE_SEQUENCE = '\033[1G'
 
 PBAR_CHAR = '█'
 PBAR_WIDTH = 20
+GREEN = '\033[0;32m'
+NO_COLOR = '\033[0m'
 
 CLEAR_SCREEN_SEQUENCE = '\033[2J\033[1;1H'
 
@@ -35,7 +37,6 @@ class ProgressBar:
         self.completed = 0
         self.progress = 0
         self.total = total
-
         self.prefix = prefix
 
     def update(self, completed: int, adjust: bool = None) -> None:
@@ -50,19 +51,22 @@ class ProgressBar:
 
         self.progress = int(self.completed / self.total * PBAR_WIDTH)
 
-        self.progress_manager.print_bars()
+        if self.prefix != 'TOTAL:':
+            self.progress_manager.print_bars()
 
     def update_total_bar(self, total: int) -> None:
         self.total = self.total + total
 
     def print(self) -> None:
 
-        progress_str = '{clear_line}{prefix}: [{progress_bar}] {percent}% \n'.format(
-            clear_line=CLEAR_LINE_SEQUENCE + GO_TO_BEGINNING_OF_LINE_SEQUENCE,
+        progress_str = '{clear_screen}{prefix:<30}: [{progress_bar:>15}] {green}{percent:>5}% {no_color}\n'.format(
+            clear_screen=CLEAR_LINE_SEQUENCE + GO_TO_BEGINNING_OF_LINE_SEQUENCE,
             prefix=self.prefix,
             progress_bar=PBAR_CHAR * self.progress +
             ' ' * (PBAR_WIDTH - self.progress),
-            percent=int(self.completed / self.total * 100)
+            green=GREEN,
+            percent=int(self.completed / self.total * 100),
+            no_color=NO_COLOR
         )
 
         print(progress_str, end='', flush=True)

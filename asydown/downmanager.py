@@ -6,20 +6,8 @@ import aiohttp
 
 from asydown.bar import ProgressBarManager
 
-CLEAR_LINE_SEQUENCE = '\033[2K'
-GO_TO_BEGINNING_OF_LINE_SEQUENCE = '\033[1G'
-
-PBAR_CHAR = '█'
-PBAR_WIDTH = 20
-
-CLEAR_SCREEN_SEQUENCE = '\033[2J\033[1;1H'
 
 BUFFER_SIZE = 2**10  # 1 KB
-
-
-TEST_DIST_DIR = './downloads'
-
-CLEAR_SCREEN_SEQUENCE = '\033[2J\033[1;1H'
 
 
 class DownManager:
@@ -54,8 +42,8 @@ class DownManager:
                     await file.write(file_data)
 
                     current_file_size = current_file_size + len(file_data)
-                    bar.update(len(file_data), True)
                     self.total_bar.update(len(file_data), True)
+                    bar.update(len(file_data), True)
                     # print_progress_bar(total, current_file_size, prefix=file_name)
 
     async def do_tasks(self):
