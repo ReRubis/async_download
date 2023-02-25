@@ -4,7 +4,7 @@ from pathlib import Path
 import aiofiles
 import aiohttp
 
-from asydown.downmanager import DownManager
+from asydown.downmanager import DownloadManager
 
 
 TEST_FILE = 'https://w.wallhaven.cc/full/l8/wallhaven-l83o92.jpg'
@@ -35,7 +35,7 @@ TEST_DIST_DIR = './downloads'
 
 async def main():
     async with aiohttp.ClientSession() as session:
-        down_manager = DownManager(session)
+        down_manager = DownloadManager(session)
         await down_manager.add_download_task(TEST_FILE, TEST_DIST_DIR)
         await down_manager.add_download_task(TEST_FILE2, TEST_DIST_DIR)
         await down_manager.add_download_task(TEST_FILE3, TEST_DIST_DIR)
