@@ -62,7 +62,7 @@ class ProgressBar:
 
         if self.last_redraw_time:
             self.last_redraw_time_delta = update_time - self.last_redraw_time
-            if self.last_redraw_time_delta.total_seconds() >= 1.5:
+            if self.last_redraw_time_delta.total_seconds() >= 0.5:
                 self.progress_manager.redraw()
                 self.last_redraw_time = datetime.now()
 

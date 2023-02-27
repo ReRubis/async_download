@@ -39,3 +39,9 @@ class DownloadManager:
 
     async def do_tasks(self):
         await asyncio.gather(*self.tasks)
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, *args):
+        return None

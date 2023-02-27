@@ -6,11 +6,18 @@ import aiohttp
 
 from asydown.downmanager import DownloadManager
 
+url_list = [
+    'https://w.wallhaven.cc/full/l8/wallhaven-l83o92.jpg',
+    'https://linuxhint.com/wp-content/uploads/2022/08/Python-Asyncio-Gather-2.jpg',
+    'https://w.wallhaven.cc/full/1p/wallhaven-1p398w.jpg',
+    'https://w.wallhaven.cc/full/57/wallhaven-57o9j5.png',
+    'https://w.wallhaven.cc/full/y8/wallhaven-y8lqo7.jpg',
+    'https://miro.medium.com/max/1400/1*eMUTAcY2t1FRG8TgFa0h4A.png',
+    'https://miro.medium.com/max/1400/1*lic9mXPkq0CNNm4g6StxXQ.png',
+    'https://www.programmingfunda.com/wp-content/uploads/2022/01/Context-Manager-in-Python.png',
+    'https://m.media-amazon.com/images/I/51tUd26IhsL.jpg',
+]
 
-TEST_FILE = 'https://w.wallhaven.cc/full/l8/wallhaven-l83o92.jpg'
-TEST_FILE2 = 'https://linuxhint.com/wp-content/uploads/2022/08/Python-Asyncio-Gather-2.jpg'
-TEST_FILE3 = 'https://w.wallhaven.cc/full/1p/wallhaven-1p398w.jpg'
-TEST_FILE4 = 'https://w.wallhaven.cc/full/57/wallhaven-57o9j5.png'
 TEST_DIST_DIR = './downloads'
 
 
@@ -35,11 +42,10 @@ TEST_DIST_DIR = './downloads'
 
 async def main():
     async with aiohttp.ClientSession() as session:
-        down_manager = DownloadManager(session)
-        await down_manager.add_download_task(TEST_FILE, TEST_DIST_DIR)
-        await down_manager.add_download_task(TEST_FILE2, TEST_DIST_DIR)
-        await down_manager.add_download_task(TEST_FILE3, TEST_DIST_DIR)
-        await down_manager.add_download_task(TEST_FILE4, TEST_DIST_DIR)
+        async with DownloadManager(session) as down_manager:
+            for url in url_list:
+                await down_manager.add_download_task(url, TEST_DIST_DIR)
+
         await down_manager.do_tasks()
 
 
