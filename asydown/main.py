@@ -44,10 +44,12 @@ async def main():
     async with aiohttp.ClientSession() as session:
         async with DownloadManager(session) as down_manager:
             for url in url_list:
-                await down_manager.add_download_task(url, TEST_DIST_DIR)
+                await down_manager.add_file_to_download(url, TEST_DIST_DIR)
 
-        await down_manager.do_tasks()
+        await down_manager.run_downloading()
 
 
 if __name__ == '__main__':
     asyncio.run(main())
+    import time
+    time.sleep(1)

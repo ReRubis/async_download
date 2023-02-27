@@ -1,5 +1,5 @@
 from __future__ import annotations
-
+import asyncio
 import time
 from datetime import datetime, timedelta
 
@@ -20,15 +20,12 @@ MEGABYTE = 2**20
 class ProgressBarManager:
     def __init__(self) -> None:
         self.total_bar = ProgressBar(self, total=0, prefix='Total')
-        self.bars_list = [self.total_bar]
+        self._bars = []
 
-    def get(self, prefix: str, total: int) -> ProgressBar:
-        if prefix in self.bars_list:
-            return self.bars_list[prefix]
-
+    def create_bar(self, prefix: str, total: int) -> ProgressBar:
         bar = ProgressBar(self, total, prefix)
         self.total_bar.total += total
-        self.bars_list.append(bar)
+        self._bars.append(bar)
         return bar
 
     def update_total_completed(self, completed: int, adjust: bool = True) -> None:
@@ -36,8 +33,20 @@ class ProgressBarManager:
 
     def redraw(self) -> None:
         print(CLEAR_SCREEN_SEQUENCE)
-        for bar in self.bars_list:
+        for bar in self.bars:
             bar.print()
+
+    def remove_bar(self, bar_to_remove: ProgressBar) -> ProgressBar | None:
+        try:
+            self._bars.remove(bar_to_remove)
+        except ValueError:
+            return None
+
+        return bar_to_remove
+
+    @property
+    def bars(self) -> list[ProgressBar]:
+        return list(sorted(self._bars, key=lambda x: x.is_done, reverse=True)) + [self.total_bar]
 
 
 class ProgressBar:
@@ -46,6 +55,8 @@ class ProgressBar:
         self.completed = 0
         self.total = total
         self.prefix = prefix
+
+        self.is_done: bool = False
 
         self.last_update_time: datetime | None = None
         self.last_update_time_delta: timedelta | None = None
@@ -110,16 +121,29 @@ class ProgressBar:
             percent = 100
             speed = 0.00
 
-        progress_str = f'{self.prefix:<30}: [{bar:>15}] {speed:>8} mb/s {GREEN}{percent:>5}%{NO_COLOR}\n'
+        if self.is_done:
+            progress_str = f'{self.prefix:<30}: [{bar:>15}] {GREEN}{"Done":>20}{NO_COLOR}'
+        else:
+            progress_str = f'{self.prefix:<30}: [{bar:>15}] {speed:>8} mb/s {GREEN}{percent:>5}%{NO_COLOR}'
 
-        print(progress_str, end='', flush=True)
+        print(progress_str, flush=True)
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, *args) -> None:
+        self.is_done = True
+        self.progress_manager.redraw()
+        await asyncio.sleep(2)
+        self.progress_manager.remove_bar(self)
+        self.progress_manager.redraw()
 
 
 def main(end, start=0):
     manager = ProgressBarManager()
-    bar1 = manager.get('bar1', 100)
-    bar2 = manager.get('bar2', 3000)
-    bar3 = manager.get('bar3', 3000)
+    bar1 = manager.create_bar('bar1', 100)
+    bar2 = manager.create_bar('bar2', 3000)
+    bar3 = manager.create_bar('bar3', 3000)
     for i in range(start, end+1):
         time.sleep(0.1)
         bar1.update(5, True)
