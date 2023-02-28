@@ -3,10 +3,11 @@ import asyncio
 import argparse
 
 import aiohttp
+from yarl import URL
 
 from asydown.downmanager import DownloadManager
 
-url_list = [
+URL_LIST = [
     'https://w.wallhaven.cc/full/l8/wallhaven-l83o92.jpg',
     'https://linuxhint.com/wp-content/uploads/2022/08/Python-Asyncio-Gather-2.jpg',
     'https://w.wallhaven.cc/full/1p/wallhaven-1p398w.jpg',
@@ -22,52 +23,54 @@ STREAMS = 5
 TEST_DIST_DIR = './downloads'
 
 # download_manager --streams=5 --dest-dir=~/Downloads http://url.one http://url.two http://url.three http://url...
-parser = argparse.ArgumentParser(
-    prog='download_manager',
-    description='Downloads Specified files',
-)
-
-parser.add_argument(
-    '-S',
-    '--streams',
-    type=int,
-    help='to set how many files you download at a time',
-    default=STREAMS,
-)
-
-parser.add_argument(
-    '-D',
-    '--destdir',
-    type=str,
-    help='pass in the directery where the files will be sent',
-    default=None,
-)
-
-parser.add_argument(
-    'links',
-    help='Activates storing in DB',
-    nargs='+',
-    default=None,
-)
 
 
-ARGS = parser.parse_args()
+def parser_init():
+    parser = argparse.ArgumentParser(
+        prog='download_manager',
+        description='Downloads Specified files',
+    )
+
+    parser.add_argument(
+        '-S',
+        '--streams',
+        type=int,
+        help='to set how many files you download at a time',
+        default=STREAMS,
+    )
+
+    parser.add_argument(
+        '-D',
+        '--destdir',
+        type=str,
+        help='pass in the directery where the files will be sent',
+        default=TEST_DIST_DIR,
+    )
+
+    parser.add_argument(
+        'url_list',
+        help='Activates storing in DB',
+        type=str,
+        default=URL_LIST,
+        nargs='*',
+
+    )
+
+    return parser
 
 
-if ARGS.destdir:
-    destdir = ARGS.destdir
-else:
-    destdir = TEST_DIST_DIR
-
-if ARGS.links:
-    url_list = [x for x in ARGS.links]
+def parse_args():
+    parser = parser_init()
+    return parser.parse_args()
 
 
 async def main():
+    args = parse_args()
+
     async with aiohttp.ClientSession() as session:
         async with DownloadManager(session) as down_manager:
-            for url in url_list:
-                await down_manager.add_file_to_download(url, destdir)
+            for url in args.url_list:
+                await down_manager.add_file_to_download(url, args.destdir)
 
         await down_manager.run_downloading()
 
