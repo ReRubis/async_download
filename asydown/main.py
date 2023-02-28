@@ -1,7 +1,7 @@
 import asyncio
-from pathlib import Path
 
-import aiofiles
+import argparse
+
 import aiohttp
 
 from asydown.downmanager import DownloadManager
@@ -18,33 +18,56 @@ url_list = [
     'https://m.media-amazon.com/images/I/51tUd26IhsL.jpg',
 ]
 
+STREAMS = 5
 TEST_DIST_DIR = './downloads'
 
+# download_manager --streams=5 --dest-dir=~/Downloads http://url.one http://url.two http://url.three http://url...
+parser = argparse.ArgumentParser(
+    prog='download_manager',
+    description='Downloads Specified files',
+)
 
-# async def download_file(session: aiohttp.ClientSession, file_url: str, dist_dir: str | Path):
-#     """Download a file."""
-#     if isinstance(dist_dir, str):
-#         dist_dir = Path(dist_dir)
+parser.add_argument(
+    '-S',
+    '--streams',
+    type=int,
+    help='to set how many files you download at a time',
+    default=STREAMS,
+)
 
-#     async with session.get(file_url) as responce:
-#         file_name = file_url.rsplit('/', 1)[-1]
-#         dist_file_path = dist_dir / file_name
-#         current_file_size = 0
+parser.add_argument(
+    '-D',
+    '--destdir',
+    type=str,
+    help='pass in the directery where the files will be sent',
+    default=None,
+)
 
-#         async with aiofiles.open(dist_file_path, 'wb') as file:
-#             async for file_data in responce.content.iter_chunked(BUFFER_SIZE):
-#                 await file.write(file_data)
+parser.add_argument(
+    'links',
+    help='Activates storing in DB',
+    nargs='+',
+    default=None,
+)
 
-#                 current_file_size = current_file_size + len(file_data)
-#                 total = responce.content_length or 0
-#                 # print_progress_bar(total, current_file_size, prefix=file_name)
+
+ARGS = parser.parse_args()
+
+
+if ARGS.destdir:
+    destdir = ARGS.destdir
+else:
+    destdir = TEST_DIST_DIR
+
+if ARGS.links:
+    url_list = [x for x in ARGS.links]
 
 
 async def main():
     async with aiohttp.ClientSession() as session:
         async with DownloadManager(session) as down_manager:
             for url in url_list:
-                await down_manager.add_file_to_download(url, TEST_DIST_DIR)
+                await down_manager.add_file_to_download(url, destdir)
 
         await down_manager.run_downloading()
 
@@ -53,3 +76,6 @@ if __name__ == '__main__':
     asyncio.run(main())
     import time
     time.sleep(1)
+
+
+# python ./asydown/main.py -S 1 -D './downloads2' 'https://m.media-amazon.com/images/I/51tUd26IhsL.jpg'
