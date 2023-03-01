@@ -3,7 +3,6 @@ import asyncio
 import argparse
 
 import aiohttp
-from yarl import URL
 
 from asydown.downmanager import DownloadManager
 
@@ -17,6 +16,16 @@ URL_LIST = [
     'https://miro.medium.com/max/1400/1*lic9mXPkq0CNNm4g6StxXQ.png',
     'https://www.programmingfunda.com/wp-content/uploads/2022/01/Context-Manager-in-Python.png',
     'https://m.media-amazon.com/images/I/51tUd26IhsL.jpg',
+    'https://images8.alphacoders.com/110/1102284.jpg',
+    'https://images3.alphacoders.com/110/1102642.jpg',
+    'https://w.wallhaven.cc/full/l3/wallhaven-l3xk6q.jpg',
+    'https://w.wallhaven.cc/full/j3/wallhaven-j3mwkm.jpg',
+    'https://w.wallhaven.cc/full/q6/wallhaven-q6dm9d.jpg',
+    'https://w.wallhaven.cc/full/j3/wallhaven-j3m8y5.png',
+    'https://w.wallhaven.cc/full/ey/wallhaven-eyvzwo.jpg',
+    'https://w.wallhaven.cc/full/28/wallhaven-28jpqg.jpg',
+    'https://w.wallhaven.cc/full/1j/wallhaven-1jrd7g.jpg',
+    'https://w.wallhaven.cc/full/5w/wallhaven-5wg9j9.jpg',
 ]
 
 STREAMS = 5
@@ -68,11 +77,13 @@ async def main():
     args = parse_args()
 
     async with aiohttp.ClientSession() as session:
-        async with DownloadManager(session) as down_manager:
+
+        async with DownloadManager(session, args.streams) as down_manager:
+
             for url in args.url_list:
                 await down_manager.add_file_to_download(url, args.destdir)
 
-        await down_manager.run_downloading()
+            await down_manager.run_downloading()
 
 
 if __name__ == '__main__':
