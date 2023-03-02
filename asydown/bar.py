@@ -22,7 +22,7 @@ class ProgressBarManager:
     def __init__(self, renderer_class=DefaultRenderer) -> None:
         self.total_bar = ProgressBar(self, total=0, prefix='Total')
         self._bars = []
-        self.renderer = renderer_class(self._bars)
+        self.renderer = renderer_class(self._bars, self.total_bar)
 
     def adjust_total(self, add_total: int) -> int:
         self.total_bar.total += add_total
@@ -101,6 +101,7 @@ class ProgressBar:
 
     async def __aexit__(self, *args) -> None:
         self.is_done = True
+        # await asyncio.sleep(2)
         self.progress_manager.remove_bar(self)
 
 

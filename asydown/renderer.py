@@ -21,15 +21,18 @@ MEGABYTE = 2**20
 
 
 class DefaultRenderer():
-    def __init__(self, progress_bars: list[ProgressBar], fps: int = 10):
+    def __init__(self, progress_bars: list[ProgressBar], total_bar: ProgressBar, fps: int = 60):
         self.bars = progress_bars
         self.active = False
         self.fps = fps
+        self.total_bar = total_bar
 
     def redraw(self) -> None:
         print(CLEAR_SCREEN_SEQUENCE)
+
         for bar in self.bars:
             self.print(bar)
+        self.print(self.total_bar)
 
     def print(self, bar: ProgressBar) -> None:
         progress = int(bar.completed / bar.total * PBAR_WIDTH)
@@ -60,6 +63,8 @@ class DefaultRenderer():
         print(progress_str, flush=True)
 
     async def run_loop(self):
+        await asyncio.sleep(0.5)
+
         ts = None
         period = timedelta(milliseconds=1000/self.fps)
         self.active = True
