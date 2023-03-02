@@ -21,7 +21,7 @@ MEGABYTE = 2**20
 
 
 class DefaultRenderer():
-    def __init__(self, progress_bars: list[ProgressBar], total_bar: ProgressBar, fps: int = 60):
+    def __init__(self, progress_bars: list[ProgressBar], total_bar: ProgressBar, fps: int = 200):
         self.bars = progress_bars
         self.active = False
         self.fps = fps
@@ -77,3 +77,4 @@ class DefaultRenderer():
 
     def stop_loop(self):
         self.active = False
+        self.redraw()
