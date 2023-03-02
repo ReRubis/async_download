@@ -28,7 +28,7 @@ URL_LIST = [
     'https://w.wallhaven.cc/full/5w/wallhaven-5wg9j9.jpg',
 ]
 
-STREAMS = 5
+STREAMS = 1
 TEST_DIST_DIR = './downloads'
 
 # download_manager --streams=5 --dest-dir=~/Downloads http://url.one http://url.two http://url.three http://url...
@@ -77,7 +77,6 @@ async def main():
     args = parse_args()
 
     async with aiohttp.ClientSession() as session:
-
         async with DownloadManager(session, args.streams) as down_manager:
 
             for url in args.url_list:
