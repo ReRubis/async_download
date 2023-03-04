@@ -19,10 +19,9 @@ MEGABYTE = 2**20
 
 
 class ProgressBarManager:
-    def __init__(self, renderer_class=DefaultRenderer) -> None:
+    def __init__(self) -> None:
         self.total_bar = ProgressBar(self, total=0, prefix='Total')
         self._bars = []
-        self.renderer = renderer_class(self._bars, self.total_bar)
 
     def adjust_total(self, add_total: int) -> int:
         self.total_bar.total += add_total
@@ -48,17 +47,17 @@ class ProgressBarManager:
 
         return bar_to_remove
 
-    async def __aenter__(self):
-        self._rendering_task = asyncio.create_task(self.renderer.run_loop())
-        return self
+    # async def __aenter__(self):
+    #     self._rendering_task = asyncio.create_task(self.renderer.run_loop())
+    #     return self
 
-    async def __aexit__(self, *args) -> None:
-        self.renderer.stop_loop()
-        await self._rendering_task
+    # async def __aexit__(self, *args) -> None:
+    #     self.renderer.stop_loop()
+    #     await self._rendering_task
 
-    @property
-    def bars(self) -> list[ProgressBar]:
-        return list(sorted(self._bars, key=lambda x: x.is_done, reverse=True)) + [self.total_bar]
+    # @property
+    # def bars(self) -> list[ProgressBar]:
+    #     return list(sorted(self._bars, key=lambda x: x.is_done, reverse=True)) + [self.total_bar]
 
 
 class ProgressBar:

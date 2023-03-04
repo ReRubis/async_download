@@ -35,13 +35,15 @@ class DefaultRenderer():
         self.print(self.total_bar)
 
     def print(self, bar: ProgressBar) -> None:
-        progress = int(bar.completed / bar.total * PBAR_WIDTH)
+        progress = 0
+        percent = 0
+        if bar.total != 0:
+            progress = int(bar.completed / bar.total * PBAR_WIDTH)
+            percent = int(bar.completed / bar.total * 100)
         if progress > PBAR_WIDTH:
             progress = PBAR_WIDTH
 
         bar_string = PBAR_CHAR * progress + ' ' * (PBAR_WIDTH - progress)
-
-        percent = int(bar.completed / bar.total * 100)
 
         if bar.last_completed_diff and bar.last_update_time_delta:
             speed = round(
@@ -63,8 +65,6 @@ class DefaultRenderer():
         print(progress_str, flush=True)
 
     async def run_loop(self):
-        await asyncio.sleep(0.5)
-
         ts = None
         period = timedelta(milliseconds=1000/self.fps)
         self.active = True
