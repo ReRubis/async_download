@@ -28,7 +28,7 @@ URL_LIST = [
     'https://w.wallhaven.cc/full/5w/wallhaven-5wg9j9.jpg',
 ]
 
-STREAMS = 1
+STREAMS = 5
 TEST_DIST_DIR = './downloads'
 
 # download_manager --streams=5 --dest-dir=~/Downloads http://url.one http://url.two http://url.three http://url...
