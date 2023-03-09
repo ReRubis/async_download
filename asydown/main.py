@@ -23,7 +23,6 @@ URL_LIST = [
     'https://w.wallhaven.cc/full/q6/wallhaven-q6dm9d.jpg',
     'https://w.wallhaven.cc/full/j3/wallhaven-j3m8y5.png',
     'https://w.wallhaven.cc/full/ey/wallhaven-eyvzwo.jpg',
-    'https://w.wallhaven.cc/full/28/wallhaven-28jpqg.jpg',
     'https://w.wallhaven.cc/full/1j/wallhaven-1jrd7g.jpg',
     'https://w.wallhaven.cc/full/5w/wallhaven-5wg9j9.jpg',
 ]

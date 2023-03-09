@@ -21,7 +21,7 @@ MEGABYTE = 2**20
 
 
 class DefaultRenderer():
-    def __init__(self, progress_bars: list[ProgressBar], total_bar: ProgressBar, fps: int = 200):
+    def __init__(self, progress_bars: list[ProgressBar], total_bar: ProgressBar, fps: int = 20):
         self.bars = progress_bars
         self.active = False
         self.fps = fps
@@ -55,12 +55,20 @@ class DefaultRenderer():
 
         if percent >= 100:
             percent = 100
-            speed = 0.00
+            speed = '0.00'
+
+        if bar.prefix == 'Total':
+            speed = ''
+
+        if isinstance(speed, float):
+            speed_to_paste = f'{speed:>8} mb/s'
+        else:
+            speed_to_paste = f'{speed:>13}'
 
         if bar.is_done:
             progress_str = f'{bar.prefix:<30}: [{bar_string:>15}] {GREEN}{"Done":>20}{NO_COLOR}'
         else:
-            progress_str = f'{bar.prefix:<30}: [{bar_string:>15}] {speed:>8} mb/s {GREEN}{percent:>5}%{NO_COLOR}'
+            progress_str = f'{bar.prefix:<30}: [{bar_string:>15}] {speed_to_paste:>8} {GREEN}{percent:>5}%{NO_COLOR}'
 
         print(progress_str, flush=True)
 

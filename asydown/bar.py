@@ -76,10 +76,6 @@ class ProgressBar:
         self.last_redraw_time: datetime | None = None
         self.last_redraw_time_delta: timedelta | None = None
 
-    def update_with_total(self, completed: int, adjust: bool = True) -> None:
-        self.update(completed, adjust)
-        self.progress_manager.update_total_completed(completed, adjust)
-
     def update(self, completed: int, adjust: bool = True) -> None:
         old_completed_value = self.completed
 
@@ -102,6 +98,7 @@ class ProgressBar:
         self.is_done = True
         # await asyncio.sleep(2)
         self.progress_manager.remove_bar(self)
+        self.progress_manager.update_total_completed(1)
 
 
 def main(end, start=0):
