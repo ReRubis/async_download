@@ -4,8 +4,8 @@ from pathlib import Path
 
 import aiofiles
 
-from asydown.bar import ProgressBarManager
-from asydown.renderer import DefaultRenderer
+from filestore.asydown.bar import ProgressBarManager
+from filestore.asydown.renderer import DefaultRenderer
 
 
 BUFFER_SIZE = 2**10  # 1 KB

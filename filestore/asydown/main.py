@@ -4,7 +4,7 @@ import argparse
 
 import aiohttp
 
-from asydown.downmanager import DownloadManager
+from filestore.asydown.downmanager import DownloadManager
 
 URL_LIST = [
     'https://w.wallhaven.cc/full/l8/wallhaven-l83o92.jpg',

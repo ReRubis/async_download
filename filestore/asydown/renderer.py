@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from asydown.bar import ProgressBar
+    from filestore.asydown.bar import ProgressBar
 
 
 CLEAR_LINE_SEQUENCE = '\033[2K'

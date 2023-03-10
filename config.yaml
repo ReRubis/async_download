@@ -1,0 +1,19 @@
+# Secret key for JWT
+secret_key: 124sajajfgSAf12astASt21y61243sdg21y210wqt12DGBDBDBskdcaa1y12DDASlLJO 
+
+
+# DB user
+DB_USER: postgres
+
+# DB name
+DB_NAME: postgres   
+
+# DB password
+DB_PASSWORD: postgres
+
+# Celery urls
+# CELERY_BROKER_URL: redis://redis:6379/0
+# CELERY_RESULT_URL: redis://redis:6379/0
+
+# Command to run the app: 
+# uvicorn socnet.main:app --reload
