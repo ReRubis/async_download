@@ -2,7 +2,6 @@ from __future__ import annotations
 import asyncio
 import time
 from datetime import datetime, timedelta
-from asydown.renderer import DefaultRenderer
 
 
 CLEAR_LINE_SEQUENCE = '\033[2K'

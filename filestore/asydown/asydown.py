@@ -30,12 +30,12 @@ URL_LIST = [
 STREAMS = 5
 TEST_DIST_DIR = './downloads'
 
-# download_manager --streams=5 --dest-dir=~/Downloads http://url.one http://url.two http://url.three http://url...
+# download_manager --streams=5 --destdir=~/Downloads http://url.one http://url.two http://url.three http://url...
 
 
 def parser_init():
     parser = argparse.ArgumentParser(
-        prog='download_manager',
+        prog='AsDown',
         description='Downloads Specified files',
     )
 
@@ -75,6 +75,7 @@ def parse_args():
 async def main():
     args = parse_args()
 
+    print()
     async with aiohttp.ClientSession() as session:
         async with DownloadManager(session, args.streams) as down_manager:
 
