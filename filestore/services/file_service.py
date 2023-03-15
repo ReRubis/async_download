@@ -1,9 +1,11 @@
+from hashlib import file_digest
 import subprocess
 import asyncio
 from fastapi import UploadFile, File
 from filestore.utils.repository import FileRepository
 from filestore.utils.db_session import session_init
 from fastapi import Depends
+from filestore.models.dbmodels import SavedFile
 
 
 class FileDownloadService():
@@ -22,17 +24,24 @@ class FileDownloadService():
                 url],
             stdout=subprocess.PIPE
         )
-
         for line in process.stdout:
             print(line.decode().strip())
-        return self.directory
+
+        file_to_save = SavedFile()
+        file_to_save.user_id = 0
+        file_to_save.file_location = f'{self.directory}/{url.rsplit("/", 1)[-1]}'
+        self.repository.save_file(SavedFile)
+        return f'{self.directory}/{url.rsplit("/", 1)[-1]}'
 
     async def upload(self, stream: File) -> str:
         """Upload a file, returns location on disk"""
         with open(stream.filename, "wb") as buffer:
             buffer.write(await stream.read())
 
-        self.repository.save_file()
+        file_to_save = SavedFile()
+        file_to_save.user_id = 0
+        file_to_save.file_location = f'{self.directory}/{stream.filename}'
+        self.repository.save_file(SavedFile)
 
         return f'{self.directory}/{stream.filename}'
 

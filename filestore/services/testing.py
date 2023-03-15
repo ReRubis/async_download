@@ -1,4 +1,7 @@
+import time
 import subprocess
+
+YEAH = ''
 
 
 def upload(stream):
@@ -12,9 +15,11 @@ def upload(stream):
             stream],
         stdout=subprocess.PIPE
     )
-
+    YEAH = None
     for line in process.stdout:
         print(line.decode().strip())
+        if YEAH is None:
+            YEAH = str(line.decode())
     # python ./filestore/asydown/asydown.py --streams=1 --destdir='downloads'
     #  'https://w.wallhaven.cc/full/5w/wallhaven-5wg9j9.jpg'
 
@@ -23,6 +28,12 @@ def upload(stream):
 
     # Print the output
     # print(output.)
+    return YEAH
 
 
-# upload('https://w.wallhaven.cc/full/ey/wallhaven-eyvzwo.jpg')
+inc = upload('https://w.wallhaven.cc/full/ey/wallhaven-eyvzwo.jpg')
+
+time.sleep(0.5)
+print('you need this: ', inc)
+if inc is None:
+    print('failure')
