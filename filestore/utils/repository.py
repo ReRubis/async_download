@@ -8,11 +8,11 @@ class BaseRepository():
     def __init__(self, session):
         self.session = session
 
-    def get(self, id) -> list:
+    def get(self, id):
         """Returns a content with a certain id"""
         return self.query.get(id)
 
-    def get_list(self):
+    def get_list(self) -> list:
         """
         Returns a list of all non-removed items
         """
@@ -50,11 +50,11 @@ class UserRepository(BaseRepository):
 
 
 class FileRepository(BaseRepository):
-    def get_file(self, id):
+    def get_file(self, id) -> SavedFile:
         """
         gets certain file
         """
-        self.get(id)
+        return self.get(id)
 
     def get_file_list(self, userid):
         """

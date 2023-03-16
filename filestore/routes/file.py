@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, File, HTTPException, status
+from fastapi.responses import FileResponse
 
 router = APIRouter(
     prefix='/file',
@@ -9,7 +10,7 @@ router = APIRouter(
 @router.get('/{id}')
 async def get_file():
     """Get a file with specified id"""
-    ...
+    return FileResponse()
 
 
 @router.get('/')

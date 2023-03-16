@@ -53,11 +53,15 @@ class FileStorageService():
 
     def get(self, id: int):
         """Return file's with certain id location on disk"""
-        ...
+        file_to_return = self.repository.get_file(id)
+        return file_to_return.file_location
 
     def get_file_list(self, user_id: int):
         """Returns a list of file locations on disk corresponding to user"""
-        ...
+        result = []
+        for file in self.repository.get_file_list(user_id):
+            result.append(file.file_location)
+        return result
 
     def add_file(self, file_path: str):
         ...
