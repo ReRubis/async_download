@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, File, HTTPException, status
 from fastapi.responses import FileResponse
-
+from filestore.schemas import reqmodels, respmodels
 from filestore.services.file_service import FileAppService
 
 
@@ -29,12 +29,14 @@ async def get_files(
     ...
 
 
-@router.post('/')
+@router.post('/hm')
 async def upload_file_by_link(
-    service: FileAppService = Depends(FileAppService)
+    url: reqmodels.FileLink,
+    service: FileAppService = Depends(FileAppService),
 ):
     """Make the service download a file from a given link"""
-    ...
+    file_location = service.down_service.download_by_url(url.url)
+    return file_location
 
 
 @router.post('/upload')

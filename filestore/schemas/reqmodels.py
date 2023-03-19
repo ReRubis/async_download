@@ -8,3 +8,7 @@ class FileToUpload(BaseModel):
     privacy_level: str
     created_at: str
     removed_at: str
+
+
+class FileLink(BaseModel):
+    url: str
