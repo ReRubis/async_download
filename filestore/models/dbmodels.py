@@ -1,7 +1,7 @@
 import datetime
 import uuid
 
-from sqlalchemy import Column, DateTime, ForeignKey, String
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Identity
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.declarative import (as_declarative, declarative_base,
                                         declared_attr)
@@ -14,11 +14,20 @@ class Base(object):
     def __tablename__(cls):
         return f'{cls.__name__.lower()}s'
 
+    # id = Column(
+    #     UUID(as_uuid=True),
+    #     primary_key=True,
+    #     default=uuid.uuid4,
+    #     nullable=False,
+    #     index=True
+    # )
+
     id = Column(
-        UUID(as_uuid=True),
+        Integer,
+        Identity(start=1, increment=1),
         primary_key=True,
-        default=uuid.uuid4,
         nullable=False,
+        index=True
     )
 
     created_at = Column(
@@ -26,6 +35,7 @@ class Base(object):
         nullable=False,
         default=datetime.datetime.utcnow
     )
+
     removed_at = Column(DateTime(timezone=True))
 
 
@@ -38,6 +48,6 @@ class User(Base):
 
 class SavedFile(Base):
 
-    user_id = Column(UUID(as_uuid=True), ForeignKey('users.id'))
+    user_id = Column(UUID(as_uuid=True), ForeignKey('users.id'), index=True)
     file_location = Column(String)
     privacy_level = Column(String, default=None)

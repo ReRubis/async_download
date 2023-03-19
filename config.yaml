@@ -16,4 +16,4 @@ DB_PASSWORD: postgres
 # CELERY_RESULT_URL: redis://redis:6379/0
 
 # Command to run the app: 
-# uvicorn socnet.main:app --reload
+# uvicorn filestore.main:app --reload
